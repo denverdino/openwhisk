@@ -1,4 +1,4 @@
-FROM buildpack-deps:trusty-curl
+FROM registry.cn-hangzhou.aliyuncs.com/acs/buildpack-deps:trusty-curl
 
 ENV DEBIAN_FRONTEND noninteractive
 

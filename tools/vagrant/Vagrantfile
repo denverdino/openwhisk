@@ -48,19 +48,25 @@ Vagrant.configure('2') do |config|
 $script_common = <<SCRIPT
   set -e
   set -x
+  sudo sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/' /etc/apt/sources.list
   sudo add-apt-repository ppa:git-core/ppa
   sudo apt-get update
   sudo apt-get install git -y
   sudo apt-get install htop
   
   # Configure swapfile
-  echo 'swapfile not found. Adding swapfile.'
-  fallocate -l 8000M /swapfile
-  chmod 600 /swapfile
-  mkswap /swapfile
-  swapon /swapfile
-  echo '/swapfile none swap defaults 0 0' >> /etc/fstab
-
+  if [ -f "/swapfile" ]
+  then
+    echo 'swapfile found'  
+  else
+    echo 'swapfile not found. Adding swapfile.'
+    fallocate -l 8000M /swapfile
+    chmod 600 /swapfile
+    mkswap /swapfile
+    swapon /swapfile
+    echo '/swapfile none swap defaults 0 0' >> /etc/fstab
+  fi
+  
   HOME=/home/vagrant
   OPENWHISK_HOME=${HOME}/openwhisk
   ANSIBLE_HOME=${OPENWHISK_HOME}/ansible
