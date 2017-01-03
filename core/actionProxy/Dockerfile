@@ -1,5 +1,7 @@
 # Dockerfile for docker skeleton (useful for running blackbox binaries, scripts, or python actions).
 FROM python:2.7.12-alpine
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/' /etc/apk/repositories
+COPY pip.conf /root/.pip/pip.conf
 
 # Upgrade and install basic Python dependencies
 RUN apk add --no-cache bash \

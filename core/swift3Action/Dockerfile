@@ -1,6 +1,6 @@
 # Dockerfile for swift actions, overrides and extends ActionRunner from actionProxy
 # This Dockerfile is partially based on: https://github.com/swiftdocker/docker-swift/
-FROM buildpack-deps:trusty
+FROM registry.cn-hangzhou.aliyuncs.com/acs/buildpack-deps:trusty
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -17,7 +17,7 @@ RUN apt-get -y purge \
 
 # Install clang manually, since SPM wants at least Clang 3-6
 RUN cd / &&\
-(curl -L -k http://llvm.org/releases/3.6.2/clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04.tar.xz | tar xJ) &&\
+(curl -L -k http://acs-upload.oss-cn-qingdao.aliyuncs.com/clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04.tar.xz | tar xJ) &&\
 cp -r /clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04/* /usr/ &&\
 rm -rf /clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04
 
@@ -31,16 +31,17 @@ RUN wget --no-verbose -O - https://swift.org/keys/all-keys.asc | gpg --import - 
 # Install Swift Ubuntu 14.04 Snapshot
 #https://swift.org/builds/swift-3.0.1-release/ubuntu1404/swift-3.0.1-RELEASE/swift-3.0.1-RELEASE-ubuntu14.04.tar.gz
 
-ENV SWIFT_VERSION 3.0.1
+ENV SWIFT_VERSION 3.0.2
 ENV SWIFT_RELEASE_TYPE RELEASE
 ENV SWIFT_PLATFORM ubuntu14.04
 
 RUN SWIFT_ARCHIVE_NAME=swift-$SWIFT_VERSION-$SWIFT_RELEASE_TYPE-$SWIFT_PLATFORM && \
-    SWIFT_URL=https://swift.org/builds/swift-$SWIFT_VERSION-$(echo "$SWIFT_RELEASE_TYPE" | tr '[:upper:]' '[:lower:]')/$(echo "$SWIFT_PLATFORM" | tr -d .)/swift-$SWIFT_VERSION-$SWIFT_RELEASE_TYPE/$SWIFT_ARCHIVE_NAME.tar.gz && \
+#    SWIFT_URL=https://swift.org/builds/swift-$SWIFT_VERSION-$(echo "$SWIFT_RELEASE_TYPE" | tr '[:upper:]' '[:lower:]')/$(echo "$SWIFT_PLATFORM" | tr -d .)/swift-$SWIFT_VERSION-$SWIFT_RELEASE_TYPE/$SWIFT_ARCHIVE_NAME.tar.gz && \
+    SWIFT_URL=http://acs-upload.oss-cn-qingdao.aliyuncs.com/swift-3.0.2-RELEASE-ubuntu14.04.tar.gz && \
     echo $SWIFT_URL && \
     wget --no-verbose $SWIFT_URL && \
-    wget --no-verbose $SWIFT_URL.sig && \
-    gpg --verify $SWIFT_ARCHIVE_NAME.tar.gz.sig && \
+#    wget --no-verbose $SWIFT_URL.sig && \
+#    gpg --verify $SWIFT_ARCHIVE_NAME.tar.gz.sig && \
     tar -xzf $SWIFT_ARCHIVE_NAME.tar.gz --directory / --strip-components=1 && \
     rm -rf $SWIFT_ARCHIVE_NAME* /tmp/* /var/tmp/*
 

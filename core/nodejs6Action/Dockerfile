@@ -2,14 +2,15 @@ FROM nodejsactionbase
 
 # based on https://github.com/nodejs/docker-node
 ENV NODE_VERSION 6.9.1
-RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz" \
+RUN curl -SLO "https://acs-upload.oss-cn-qingdao.aliyuncs.com/node-v$NODE_VERSION-linux-x64.tar.gz" \
   && tar -xzf "node-v$NODE_VERSION-linux-x64.tar.gz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-x64.tar.gz"
 
+RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
 
 # workaround for this: https://github.com/npm/npm/issues/9863
 RUN cd $(npm root -g)/npm \
- && npm install fs-extra \
+ && cnpm install fs-extra \
  && sed -i -e s/graceful-fs/fs-extra/ -e s/fs\.rename/fs\.move/ ./lib/utils/rename.js
 
 WORKDIR /nodejsAction
@@ -18,7 +19,7 @@ WORKDIR /nodejsAction
 RUN rm -rf .project .settings build.xml Dockerfile README node_modules logs
 RUN npm install .
 
-RUN npm install \
+RUN cnpm install \
 apn@2.1.2 \
 async@2.1.4 \
 body-parser@1.15.2 \

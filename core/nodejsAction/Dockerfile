@@ -2,10 +2,10 @@ FROM nodejsactionbase
 
 # based on https://github.com/nodejs/docker-node
 ENV NODE_VERSION 0.12.17
-RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz" \
+RUN curl -SLO "https://acs-upload.oss-cn-qingdao.aliyuncs.com/node-v$NODE_VERSION-linux-x64.tar.gz" \
   && tar -xzf "node-v$NODE_VERSION-linux-x64.tar.gz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-x64.tar.gz"
-
+RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
 WORKDIR /nodejsAction
 
 # Install app dependencies

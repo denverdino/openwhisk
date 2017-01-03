@@ -1,6 +1,6 @@
 # Dockerfile for swift3 actions, overrides and extends ActionRunner from actionProxy
 # This Dockerfile is partially based on: https://github.com/swiftdocker/docker-swift/
-FROM buildpack-deps:trusty
+FROM registry.cn-hangzhou.aliyuncs.com/acs/buildpack-deps:trusty
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -20,14 +20,15 @@ RUN wget --no-verbose -O - https://swift.org/keys/all-keys.asc | gpg --import - 
     gpg --keyserver hkp://pool.sks-keyservers.net --refresh-keys Swift
 
 # Install Swift Ubuntu 14.04 Snapshot
-ENV SWIFT_VERSION 2.2-SNAPSHOT-2016-01-11-a
+ENV SWIFT_VERSION 2.2.1-SNAPSHOT-2016-04-23-a
 ENV SWIFT_PLATFORM ubuntu14.04
 
 RUN SWIFT_ARCHIVE_NAME=swift-$SWIFT_VERSION-$SWIFT_PLATFORM && \
-    SWIFT_URL=https://swift.org/builds/$(echo "$SWIFT_PLATFORM" | tr -d .)/swift-$SWIFT_VERSION/$SWIFT_ARCHIVE_NAME.tar.gz && \
+#    SWIFT_URL=https://swift.org/builds/$(echo "$SWIFT_PLATFORM" | tr -d .)/swift-$SWIFT_VERSION/$SWIFT_ARCHIVE_NAME.tar.gz && \
+    SWIFT_URL=https://acs-upload.oss-cn-qingdao.aliyuncs.com/swift-2.2.1-SNAPSHOT-2016-04-23-a-ubuntu14.04.tar.gz && \
     wget --no-verbose $SWIFT_URL && \
-    wget --no-verbose $SWIFT_URL.sig && \
-    gpg --verify $SWIFT_ARCHIVE_NAME.tar.gz.sig && \
+#    wget --no-verbose $SWIFT_URL.sig && \
+#    gpg --verify $SWIFT_ARCHIVE_NAME.tar.gz.sig && \
     tar -xzf $SWIFT_ARCHIVE_NAME.tar.gz --directory / --strip-components=1 && \
     rm -rf $SWIFT_ARCHIVE_NAME* /tmp/* /var/tmp/*
 
